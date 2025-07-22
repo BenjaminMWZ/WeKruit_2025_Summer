@@ -1,10 +1,11 @@
-openai-whisper==20231106     # <— only ASR dependency now
-# (remove whisperx, faster-whisper, av, ctranslate2 lines)
+openai-whisper==20231106
 
-# -- existing packages you already had --
-torch==2.2.2             --extra-index-url https://download.pytorch.org/whl/cpu
-torchaudio==2.2.2        --extra-index-url https://download.pytorch.org/whl/cpu
+# core stack
+torch==2.2.2            --extra-index-url https://download.pytorch.org/whl/cpu
+torchaudio==2.2.2       --extra-index-url https://download.pytorch.org/whl/cpu
 speechbrain==1.0.2
+
+# light deps
 webrtcvad==2.0.10
 scikit-learn==1.4.2
 soundfile==0.12.1
@@ -15,3 +16,7 @@ tqdm==4.66.4
 tabulate==0.9.0
 transformers==4.41.1
 huggingface-hub==0.23.3
+
+# yaml loader versions that match SpeechBrain
+hyperpyyaml==1.2.1
+ruamel.yaml==0.17.28

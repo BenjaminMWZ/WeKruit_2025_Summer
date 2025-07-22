@@ -52,6 +52,16 @@ def webrtc_vad_segments(wav, sr, frame_ms=30):
         speech.append((start, len(wav)/sr))
     return speech
 
+def transcribe_chunks(model, chunks, full_wav, sr):
+    """Run Whisper on a list of (start, stop) tuples and concatenate."""
+    if not chunks:
+        return ""
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+        audio = np.concatenate([full_wav[int(s*sr):int(e*sr)] for s, e in chunks])
+        sf.write(tmp.name, audio, sr)
+        res = model.transcribe(tmp.name, fp16=False)
+    return res["text"].strip()
+
 def ts(sec):                 # nice MM:SS string
     m, s = divmod(int(sec), 60)
     return f"{m:02d}:{s:02d}"
@@ -128,9 +138,29 @@ inter_segments = [(s,e) for (s,e), lbl in zip(speech_chunks, labels)
                   if lbl==inter_lbl]
 inter_wav = np.concatenate([wav[int(s*sr):int(e*sr)] for s,e in inter_segments])
 
+interviewee_lbl = inter_lbl  # Define interviewee_lbl as the label with longest duration
+
 with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
     sf.write(tmp.name, inter_wav, sr)
     inter_wav_path = tmp.name
+
+# ------------------------------------------------------------------
+# TRANSCRIBE BOTH SPEAKERS FOR DEBUGGING
+# ------------------------------------------------------------------
+wh_model = whisper.load_model("tiny")
+
+interviewer_segments = [(s, e) for (s, e), lbl in zip(speech_chunks, labels)
+                        if lbl != interviewee_lbl]
+
+interviewee_txt  = transcribe_chunks(wh_model, inter_segments,  wav, sr)
+interviewer_txt  = transcribe_chunks(wh_model, interviewer_segments, wav, sr)
+
+with open("speaker_dialogue.txt", "w") as fp:
+    fp.write(f'Interviewee: "{interviewee_txt}"\n')
+    fp.write(f'Interviewer: "{interviewer_txt}"\n')
+
+print("✓ dialogue file saved → speaker_dialogue.txt")
+# ------------------------------------------------------------------
 
 # 3) Whisper-tiny ASR → filler timestamps
 wh = whisper.load_model("tiny")
