@@ -1,0 +1,20 @@
+# macOS system files
+.DS_Store
+*/.DS_Store
+
+# Python env
+spb-env/
+SpeechBrain/spb-env/
+
+# Model weights
+SpeechBrain/pretrained_models/
+
+# Output
+output/
+*.zip
+*.mp4
+*.wav
+*.xlsx
+
+# Secrets
+.env
