@@ -5,6 +5,7 @@
 # Python env
 spb-env/
 SpeechBrain/spb-env/
+venv/
 
 # Model weights
 SpeechBrain/pretrained_models/
