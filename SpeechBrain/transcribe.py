@@ -11,20 +11,32 @@ Outputs
 <base>.txt          – full transcript (“At MM:SS Speaker: …”)
 """
 
-# ---- stub TensorFlow exactly as in first script -----------------------
+# ───── boot block (must stay at the very top of the script) ────────────
 import os, sys, types, importlib.machinery
-os.environ["TRANSFORMERS_NO_TF"] = "1"
+os.environ["TRANSFORMERS_NO_TF"] = "1"          # never load real TensorFlow
+os.environ["NUMBA_THREADING_LAYER"] = "workqueue"   # old-TBB fix
+
 class _TFStub(types.ModuleType):
-    __spec__ = importlib.machinery.ModuleSpec("tensorflow", loader=None)
-    __file__ = "<stub>"
-    class _Dummy:
-        """Dummy class to satisfy type checks."""
-        pass
-    Tensor = Variable = _Dummy
-    def __getattr__(self, k):
-        sub = _TFStub(f"tensorflow.{k}"); sys.modules[sub.__name__] = sub; return sub
-sys.modules["tensorflow"] = _TFStub("tensorflow")
-# ----------------------------------------------------------------------
+    """Lazy TensorFlow stub which satisfies Torch + Transformers."""
+    def __init__(self, name):
+        super().__init__(name)
+        self.__spec__ = importlib.machinery.ModuleSpec(name, loader=None)
+        self.__file__ = "<stub>"                # lets inspect.getsourcefile() work
+        # --- minimal types expected by transformers.tf_utils -------------
+        class _Dummy:                                   # pylint: disable=too-few-public-methods
+            pass
+        self.Tensor   = _Dummy                          # ← NEW
+        self.Variable = _Dummy                          # ← NEW
+
+    def __getattr__(self, item):                        # auto-create sub-modules
+        sub = _TFStub(f"{self.__name__}.{item}")
+        setattr(self, item, sub)
+        sys.modules[sub.__name__] = sub
+        return sub
+
+tf_stub = _TFStub("tensorflow")
+sys.modules["tensorflow"] = tf_stub
+# ────────────────────────────────────────────────────────────────────────
 
 import pathlib, itertools, soundfile as sf, librosa
 from transformers import (pipeline, AutoProcessor,
@@ -62,7 +74,7 @@ if sr != 16_000:
 tmp = wav_path.with_suffix(".16k.wav")
 sf.write(tmp, wav, 16_000)
 
-out   = asr({"path": str(tmp)}, batch_size=8)
+out = asr(str(tmp), batch_size=8)         
 words = out["chunks"]
 
 def groups(word_list):

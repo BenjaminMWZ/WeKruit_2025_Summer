@@ -18,3 +18,13 @@ tokenizers==0.19.1          # pulled by transformers
 scikit-learn==1.4.2
 tqdm==4.66.4
 ffmpeg-python==0.2.0
+
+accelerate==0.29.0
+datasets==2.14.6
+
+moviepy==1.3.3
+
+# Enhanced filler detection
+webrtcvad==2.0.10
+praat-parselmouth==0.4.3
+speechbrain==0.5.16
