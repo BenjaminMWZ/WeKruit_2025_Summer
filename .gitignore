@@ -16,6 +16,7 @@ output/
 *.mp4
 *.wav
 *.xlsx
+*.mov
 
 # Secrets
 .env

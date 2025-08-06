@@ -1,10 +1,7 @@
-At 00:00, Speaker: " My  name  is  Kong  Wang.  I'm  a"
-At 00:05, Speaker: " Linux  kernel  developer  and  I  have  about  16  years"
-At 00:10, Speaker: " experience  of  Linux  kernel  development.  And  I"
-At 00:15, Speaker: " worked  at  multiple  build  companies  before  founding  my  company.  SO  before"
-At 00:20, Speaker: " founding  the  company,  I  worked  at  Baidons  for  more  than"
-At 00:25, Speaker: " four  years.  And  before  Baidons,  I  worked  at  Twitter  for"
-At 00:30, Speaker: " about  six  years  and  also  previous  to  Twitter,"
-At 00:35, Speaker: " I  worked  at  Red  Hat  for  about  five  years."
-At 00:40, Speaker: " And  this  is  pretty  much  about"
-At 00:45, Speaker: " me  and  my  background."
+00:00 - 00:14: My name is Kwang and, er, er, I'm a linear kernel developer and, er, er, I have about 16, er, years' experience of, er, er, of linear kernel development.
+00:14 - 00:25: And I worked at multiple, er, build companies before founding my company. SO before, er, er, founding the company, I worked at Bidons for more than four years.
+00:25 - 00:32: And before Biden, I worked at Twitter for about six years.
+00:32 - 00:36: And also, prior to Twitter, I worked at Redhead
+00:36 - 00:39: for about five years.
+00:40 - 00:46: And yeah, and this is pretty much about me and my background.
+[FILLER] detected at 00:00
